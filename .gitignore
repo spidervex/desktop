@@ -1,0 +1,62 @@
+# ---- OS cruft ----
+.DS_Store
+Thumbs.db
+
+# ---- Node / package managers ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Don't ignore lockfiles — commit one of these:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ---- Angular / CLI outputs ----
+dist/
+.angular/
+.angular/cache/
+tmp/
+temp/
+coverage/
+.sass-cache/
+
+# Environment overrides you don't want in git
+src/environments/*.local.ts
+src/environments/*.dev.local.ts
+src/environments/*.prod.local.ts
+
+# ---- TypeScript / tooling ----
+*.tsbuildinfo
+.eslintcache
+
+# ---- Test artifacts (Cypress/Playwright/Karma/etc.) ----
+cypress/screenshots/
+cypress/videos/
+playwright-report/
+test-results/
+.report/
+.nyc_output/
+
+# ---- IDEs ----
+# JetBrains (IntelliJ/WebStorm/etc.)
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code (optional: keep recommended files, ignore the rest)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# ---- Misc editor/temp files ----
+*.swp
+*.swo
+*~
+/.idea/

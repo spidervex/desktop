@@ -31,6 +31,10 @@ import { Subscription } from 'rxjs';
         <img src="assets/clock.svg" alt="">
         <span>Clock</span>
       </button>
+      <button class="desktop-icon" (click)="openDocs()" title="Documentation">
+        <img src="assets/docs.svg" alt="">
+        <span>Docs</span>
+      </button>
     </div>
     <ng-container *ngFor="let w of windows; trackBy: trackById">
       <app-window *ngIf="w.state !== 'minimized'" [win]="w"></app-window>
@@ -70,5 +74,9 @@ export class DesktopComponent implements OnInit, OnDestroy {
 
   openClock() {
     this.wm.createWindow('clock', { title: 'Clock', rect: { left: 260, top: 260, width: 520, height: 320 } });
+  }
+
+  openDocs() {
+    this.wm.createWindow('docs', { title: 'Documentation', rect: { left: 180, top: 160, width: 820, height: 560 } });
   }
 }

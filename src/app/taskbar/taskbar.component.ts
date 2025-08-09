@@ -29,6 +29,7 @@ import { interval, Subscription } from 'rxjs';
         <button class="btn" (click)="openSettings()">Settings</button>
         <button class="btn" (click)="openTodo()">To‑Do</button>
         <button class="btn" (click)="openClock()">Clock</button>
+        <button class="btn" (click)="openDocs()">Documentation</button>
       </div>
     </div>
   `,
@@ -67,4 +68,5 @@ export class TaskbarComponent implements OnInit, OnDestroy {
   openSettings() { this.wm.createWindow('settings', { title: 'Settings', rect: { left: 150, top: 150, width: 520, height: 360 } }); this.menuOpen = false; }
   openTodo() { this.wm.createWindow('todo', { title: 'To‑Do', rect: { left: 200, top: 120, width: 720, height: 520 } }); this.menuOpen = false; }
   openClock() { this.wm.createWindow('clock', { title: 'Clock', rect: { left: 240, top: 160, width: 520, height: 320 } }); this.menuOpen = false; }
+  openDocs() { this.wm.createWindow('docs', { title: 'Documentation', rect: { left: 200, top: 200, width: 820, height: 560 } }); this.menuOpen = false; }
 }

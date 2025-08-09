@@ -10,7 +10,7 @@ export interface WindowRect {
 export interface OsWindow {
   id: number;
   title: string;
-  appType: 'text-editor' | 'map' | 'settings' | 'todo';
+  appType: 'text-editor' | 'map' | 'settings' | 'todo' | 'clock';
   rect: WindowRect;
   prevRect?: WindowRect | null;
   zIndex: number;

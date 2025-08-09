@@ -6,13 +6,14 @@ import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { MapComponent } from '../map/map.component';
 import { SettingsComponent } from '../settings/settings.component';
 import { TodoComponent } from '../todo/todo.component';
+import { ClockComponent } from '../clock/clock.component';
 
 type ResizeEdge = 'n'|'s'|'w'|'e'|'nw'|'ne'|'sw'|'se'|null;
 
 @Component({
   selector: 'app-window',
   standalone: true,
-  imports: [CommonModule, TextEditorComponent, MapComponent, SettingsComponent, TodoComponent],
+  imports: [CommonModule, TextEditorComponent, MapComponent, SettingsComponent, TodoComponent, ClockComponent],
   template: `
     <div class="window" [class.maximized]="win.state==='maximized'"
          [ngStyle]="{ left: win.rect.left+'px', top: win.rect.top+'px', width: win.rect.width+'px', height: win.rect.height+'px', zIndex: win.zIndex }"
@@ -29,6 +30,7 @@ type ResizeEdge = 'n'|'s'|'w'|'e'|'nw'|'ne'|'sw'|'se'|null;
           <app-map *ngSwitchCase="'map'"></app-map>
           <app-settings *ngSwitchCase="'settings'"></app-settings>
           <app-todo *ngSwitchCase="'todo'"></app-todo>
+          <app-clock *ngSwitchCase="'clock'"></app-clock>
         </ng-container>
       </div>
 

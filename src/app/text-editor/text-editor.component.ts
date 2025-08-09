@@ -7,27 +7,71 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="editor-toolbar">
-      <input class="btn" style="min-width:160px" [(ngModel)]="filename" placeholder="untitled" (input)="touch()" />
-      <button class="btn" (click)="save()">Save</button>
-      <button class="btn" (click)="saveAs()">Save As</button>
-      <button class="btn" (click)="toggleOpenPanel()">Open</button>
-      <button class="btn" (click)="newDoc()">New</button>
-      <button class="btn" (click)="deleteDoc()" [disabled]="!filename">Delete</button>
-      <span style="color:var(--text-dim); font-size:12px; margin-left:8px;">{{ savedLabel }}</span>
-    </div>
+    <div class="editor-wrap" (click)="closeMenus()">
+      <!-- Menu bar -->
+      <div class="menubar" (click)="$event.stopPropagation()">
+        <div class="menu">
+          <button class="menu-btn" (click)="toggleMenu('file')">File ▾</button>
+          <div class="menu-dropdown" *ngIf="openMenu==='file'">
+            <button class="menu-item" (click)="newDoc()">New</button>
+            <button class="menu-item" (click)="save()">Save</button>
+            <button class="menu-item" (click)="saveAs()">Save As…</button>
+            <div class="separator"></div>
+            <div class="menu-title">Open</div>
+            <div class="menu-empty" *ngIf="files.length===0">No saved files</div>
+            <button class="menu-item" *ngFor="let f of files" (click)="openDoc(f)">{{ f }}</button>
+            <div class="separator"></div>
+            <button class="menu-item danger" (click)="deleteDoc()" [disabled]="!filename">Delete</button>
+          </div>
+        </div>
+        <div class="menu filename-area">
+          <input class="filename" [(ngModel)]="filename" placeholder="untitled" (input)="touch()" />
+        </div>
+      </div>
 
-    <div *ngIf="openPanel" style="background:var(--panel-2); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px; margin:8px 0; max-height:160px; overflow:auto;">
-      <div style="color:var(--text-dim); font-size:12px; margin-bottom:6px;">Saved files</div>
-      <div *ngIf="files.length === 0" style="color:var(--text-dim); font-size:12px;">No saved files</div>
-      <div *ngFor="let f of files" style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
-        <button class="btn" style="flex:1; text-align:left;" (click)="openDoc(f)">{{ f }}</button>
-        <button class="btn" (click)="deleteDoc(f)">Delete</button>
+      <!-- Editor surface -->
+      <div class="console-frame">
+        <div class="console-inner">
+          <textarea class="editor-textarea" [(ngModel)]="content" (input)="markDirty()" spellcheck="false"></textarea>
+        </div>
+      </div>
+
+      <!-- Status bar -->
+      <div class="statusbar">
+        <div class="status-left">{{ filename || 'untitled' }}</div>
+        <div class="status-right">{{ savedLabel }}</div>
       </div>
     </div>
-
-    <textarea class="editor-textarea" [(ngModel)]="content" (input)="markDirty()"></textarea>
   `,
+  styles: [
+    `:host { display:block; height:100%; }
+     .editor-wrap { height:100%; display:flex; flex-direction:column; gap:8px; }
+     /* Menubar */
+     .menubar { display:flex; align-items:center; gap:8px; background: var(--panel-2); border:1px solid rgba(0,0,0,0.25); border-radius:8px; padding:4px 6px; }
+     .menu { position:relative; }
+     .menu-btn { background: transparent; color: var(--text); border: 1px solid transparent; border-radius:6px; padding:6px 10px; cursor:pointer; }
+     .menu-btn:hover { background: rgba(0,0,0,0.15); }
+     .menu-dropdown { position:absolute; top: 32px; left: 0; min-width: 220px; background: var(--panel); border:1px solid rgba(0,0,0,0.25); border-radius:8px; box-shadow: var(--shadow); padding:6px; z-index: 100; display:flex; flex-direction:column; gap:4px; max-height: 260px; overflow:auto; }
+     .menu-item { text-align:left; background: transparent; color: var(--text); border:1px solid transparent; border-radius:6px; padding:6px 8px; cursor:pointer; }
+     .menu-item:hover { background: rgba(0,0,0,0.15); }
+     .menu-item.danger { color:#fff; background:#b23c3c; border-color:#c25454; }
+     .menu-title { color: var(--text-dim); font-size:12px; padding:4px 6px 0 6px; }
+     .menu-empty { color: var(--text-dim); font-size:12px; padding:0 6px 4px 6px; }
+     .separator { height:1px; background: rgba(0,0,0,0.25); margin:4px 0; }
+     .filename-area { margin-left:auto; }
+     .filename { background: var(--panel); color: var(--text); border:1px solid rgba(0,0,0,0.25); border-radius:8px; padding:6px 8px; min-width:180px; }
+
+     /* Console surface */
+     .console-frame { flex:1; min-height:0; background: #0b0d10; border:1px solid rgba(0,0,0,0.6); border-radius:10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03), inset 0 10px 40px rgba(0,0,0,0.35); overflow:hidden; }
+     .console-inner { position:relative; height:100%; width:100%;
+        background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 22px);
+        }
+     .editor-textarea { width:100%; height:100%; resize:none; background: transparent; color:#d1e7ff; border:none; outline:none; padding:14px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:14px; line-height:22px; caret-color: var(--accent); }
+
+     /* Status bar */
+     .statusbar { display:flex; align-items:center; justify-content:space-between; color: var(--text-dim); font-size:12px; padding:4px 8px; border:1px solid rgba(0,0,0,0.25); border-radius:8px; background: var(--panel-2); }
+    `
+  ]
 })
 export class TextEditorComponent {
   @Input({ required: true }) storageKey!: string;
@@ -35,7 +79,7 @@ export class TextEditorComponent {
   content = '';
   filename = '';
   savedLabel = '';
-  openPanel = false;
+  openMenu: 'file' | null = null;
   files: string[] = [];
   private dirty = false;
 
@@ -91,7 +135,7 @@ export class TextEditorComponent {
     this.content = data;
     this.dirty = false;
     this.savedLabel = `Opened '${name}'`;
-    this.openPanel = false;
+    this.openMenu = null;
     setTimeout(() => { if (!this.dirty) this.savedLabel = ''; }, 1200);
   }
 
@@ -117,8 +161,9 @@ export class TextEditorComponent {
     this.savedLabel = 'New document';
   }
 
-  toggleOpenPanel() {
-    this.openPanel = !this.openPanel;
-    if (this.openPanel) this.refreshIndex();
+  toggleMenu(which: 'file') {
+    this.openMenu = this.openMenu === which ? null : which;
+    if (this.openMenu === 'file') this.refreshIndex();
   }
+  closeMenus() { this.openMenu = null; }
 }

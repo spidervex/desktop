@@ -5,13 +5,14 @@ import { WindowManagerService } from '../services/window-manager.service';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { MapComponent } from '../map/map.component';
 import { SettingsComponent } from '../settings/settings.component';
+import { TodoComponent } from '../todo/todo.component';
 
 type ResizeEdge = 'n'|'s'|'w'|'e'|'nw'|'ne'|'sw'|'se'|null;
 
 @Component({
   selector: 'app-window',
   standalone: true,
-  imports: [CommonModule, TextEditorComponent, MapComponent, SettingsComponent],
+  imports: [CommonModule, TextEditorComponent, MapComponent, SettingsComponent, TodoComponent],
   template: `
     <div class="window" [class.maximized]="win.state==='maximized'"
          [ngStyle]="{ left: win.rect.left+'px', top: win.rect.top+'px', width: win.rect.width+'px', height: win.rect.height+'px', zIndex: win.zIndex }"
@@ -27,6 +28,7 @@ type ResizeEdge = 'n'|'s'|'w'|'e'|'nw'|'ne'|'sw'|'se'|null;
           <app-text-editor *ngSwitchCase="'text-editor'" [storageKey]="'text-editor-'+win.id"></app-text-editor>
           <app-map *ngSwitchCase="'map'"></app-map>
           <app-settings *ngSwitchCase="'settings'"></app-settings>
+          <app-todo *ngSwitchCase="'todo'"></app-todo>
         </ng-container>
       </div>
 

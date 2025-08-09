@@ -19,6 +19,7 @@ import { OsWindow } from '../models/window.model';
         <button class="btn" (click)="openTextEditor()">Text Editor</button>
         <button class="btn" (click)="openMap()">Map</button>
         <button class="btn" (click)="openSettings()">Settings</button>
+        <button class="btn" (click)="openTodo()">To‑Do</button>
       </div>
     </div>
   `,
@@ -39,4 +40,5 @@ export class TaskbarComponent implements OnInit, OnDestroy {
   toggleWindow(w: OsWindow) { this.wm.toggleMinimize(w.id); }
   openMap() { this.wm.createWindow('map', { title: 'Map' }); this.menuOpen = false; }
   openSettings() { this.wm.createWindow('settings', { title: 'Settings', rect: { left: 150, top: 150, width: 520, height: 360 } }); this.menuOpen = false; }
+  openTodo() { this.wm.createWindow('todo', { title: 'To‑Do', rect: { left: 200, top: 120, width: 720, height: 520 } }); this.menuOpen = false; }
 }
